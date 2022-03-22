@@ -49,7 +49,7 @@ def parse_rules(rulebase, parent_rule_number) -> list:
       tmp_rule['No.'] = str(rule_number)
       tmp_rule['Enabled'] = rule['enabled']
       tmp_rule['Hits'] = rule['hits']['value']
-      tmp_rule['Name'] = rule['name']
+      tmp_rule['Name'] = rule['name'] if rule.get('name') else ''
       tmp_rule['Source'] = '<br/>'.join([value['name'] for value in rule['source']])
       tmp_rule['Destination'] = '<br/>'.join([value['name'] for value in rule['destination']])
       tmp_rule['Service'] = '<br/>'.join([value['name'] for value in rule['service']])
