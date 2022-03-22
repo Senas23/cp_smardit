@@ -11,7 +11,7 @@ all_columns = ['No.', 'Enabled', 'Hits', 'Name', 'Source', 'Destination', 'Servi
 
 def export_policies():
   policies = {}
-  response = client.run_command("show-packages", payload={"limit": 100, "details-level": "full"})
+  response = client.run_command("show-packages", payload={"limit": 500, "details-level": "full"})
   for policy in response['packages']:
     log.info(f"[+] Policy: {policy['name']}")
     log.info(f"[+] FW: {[ fw['name'] for fw in policy['installation-targets'] ]}")
