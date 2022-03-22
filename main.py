@@ -57,7 +57,7 @@ def parse_rules(rulebase, parent_rule_number) -> list:
       tmp_rule['Track'] = rule['track']['type']['name']
       tmp_rule['Install-On'] = '<br/>'.join([value['name'] for value in rule['install-on']])
       tmp_rule['Time'] = '<br/>'.join([value['name'] for value in rule['time']])
-      tmp_rule['Comments'] = '<br/>'.join(rule['comments'])
+      tmp_rule['Comments'] = str(rule['comments']).replace('\n', '<br/>') if rule.get('comments') else ''
       rules.append(tmp_rule)
       if rule.get('inline-layer'):
         rules.extend(export_rules(rule['inline-layer']['name'], parent_rule_number=rule_number))
