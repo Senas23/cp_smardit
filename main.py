@@ -63,7 +63,7 @@ def parse_rules(rulebase, parent_rule_number) -> list:
         rules.extend(export_rules(rule['inline-layer']['name'], parent_rule_number=rule_number))
   return rules
 
-def render_html(policy: str, firewalls: str, matched_conditions: list):
+def render_html(policy: str, firewalls: str, matched_conditions: list, number_of_rules: int):
   html_head = """
   <html>
     <head>
@@ -87,6 +87,7 @@ def render_html(policy: str, firewalls: str, matched_conditions: list):
     f.write("<br>")
     f.write(f"<h2>Policy: {policy}</h2>")
     f.write(f"<h3>Firewalls: {firewalls}</h3>")
+    f.write(f"<h3>Rule Base: {number_of_rules}</h3>")
     for item in matched_conditions:
       for layer, check in item.items():
         f.write(f"<h4>Layer: {layer}</h4>")
@@ -171,8 +172,10 @@ def main():
     
     for pk, pv in policies.items():
       matched_conditions = []
+      number_of_rules = 0
       for layer in pv['Rules']:
         for rk, rules in layer.items():
+          number_of_rules += len(rules)
           matched_condition = {}
           for check in conditional_checks:
             filtered_rules = [*filter(check["filter"], rules)]
@@ -182,8 +185,9 @@ def main():
               data = [[item.get(key) for key in check["columns"]] for item in filtered_rules]
             matched_condition[check['name']] = get_dataframe_html(header, data)
           matched_conditions.append({rk: matched_condition})
+      log.info(f"[*] Policy {pk} has {number_of_rules} rules")
       firewalls = ', '.join(pv['Firewalls'])
-      render_html(pk, firewalls, matched_conditions)
+      render_html(pk, firewalls, matched_conditions, number_of_rules)
 
     # logout
     client.logout()
