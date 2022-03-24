@@ -161,10 +161,8 @@ def main():
         sys.exit(1)
     
     conditional_checks = [
-      {'name': 'Zero Hits', 'filter': lambda rule: rule["Hits"] == 0 and rule['Action'] != 'Drop', 'columns': ['No.','Hits', 'Name']},
+      {'name': 'Zero Hits', 'filter': lambda rule: rule["Hits"] == 0 and rule['Action'] != 'Drop', 'columns': all_columns},
       {'name': 'Over 1 Million Hits', 'filter': lambda rule: rule["Hits"] >= 1_000_000 and rule['Action'] != 'Drop', 'columns': all_columns},
-      {'name': 'Over 5K Hits', 'filter': lambda rule: rule["Hits"] >= 5_000 and rule['Action'] != 'Drop', 'columns': ['No.','Hits', 'Name']},
-      {'name': 'Unauthorized Admin Access', 'filter': lambda rule: rule["Source"] != 'Admins' and 'Corporate-GW' in rule['Destination'] and rule['Action'] != 'Drop', 'columns': all_columns},
       {'name': 'Disabled Rules', 'filter': lambda rule: rule["Enabled"] == False and rule['Action'] != 'Drop', 'columns': all_columns},
       {'name': 'Parent Rules with Any', 'filter': lambda rule: any('Any' in rule[field] for field in ["Source", "Destination", "Service"]) and '.' not in rule['No.'] and rule['Action'] != 'Drop', 'columns': all_columns},
       {'name': 'Inline-Layer Rules with Any', 'filter': lambda rule: any('Any' in rule[field] for field in ["Source", "Destination", "Service"]) and '.' in rule['No.'] and rule['Action'] != 'Drop', 'columns': all_columns}
